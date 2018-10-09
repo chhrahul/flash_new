@@ -30,16 +30,7 @@
     
     <engine name="android" spec="^7.0.0" />
 
-	<preference name="EnableViewportScale" value="true"/>
-	<preference name="MediaPlaybackAllowsAirPlay" value="false"/>
-	<preference name="MediaPlaybackRequiresUserAction" value="false"/>
-	<preference name="AllowInlineMediaPlayback" value="true"/>
-	<preference name="TopActivityIndicator" value="white"/>
 	
-	<preference name="AutoHideSplashScreen" value="true" />
-	<preference name="ShowSplashScreenSpinner" value="true"/>
-	<preference name="splashscreen" value="splash" />
-    <preference name="splashScreenDelay" value="3000" />
 	<allow-navigation href="*youtube*" />
 	<allow-navigation href="*ytimg*" />
 	<allow-navigation href="*youtube-nocookie*" />
