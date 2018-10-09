@@ -29,6 +29,7 @@
     <plugin name="cordova-plugin-whitelist" spec="1" />
     
     <engine name="android" spec="^7.0.0" />
+    <engine name="ios" spec="^4.5.5" />
 
 	
 	 
