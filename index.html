@@ -4,8 +4,62 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no">
-<title>VISICOIL - Flexible Soft Tissue Markers</title>
-</head> 
+<title>Air Animal</title>
+  <!-- Include jQuery Mobile stylesheets -->
+  <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+  <!-- Include jQuery Mobile stylesheets -->
+  <link rel="stylesheet" href="css/style.css" media="all">
+  <!-- Include the jQuery Datepicker css-->
+  <link rel="stylesheet" href="css/jquery.mobile.datepicker.css" media="all">
+  <link rel="stylesheet" href="css/jquery.mobile.datepicker.theme.css" media="all">
+  <link rel="stylesheet" href="css/owl.carousel.css" media="all">
+  <!-- Fonts Style -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+  <!--Icon Font css-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Include the jQuery library -->
+  <script src="js/jquery-1.11.3.min.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- Include the jQuery Mobile library -->
+  <script src="js/jquery.mobile-1.4.5.min.js"></script>
+  
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script> -->
+  <script src="js/jquery.ui.touch-punch.min.js"></script>
+  <!-- Include Dragend jQuery -->
+  <script src="js/jquery.touchSwipe.js"></script>
+  <!-- Include the jQuery Datepicker -->
+  <script src="js/datepicker.js"></script>
+  <script src="js/jquery.mobile.datepicker.js"></script>
+  <script src="cordova.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/functions.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc082fCt_9glV0jzqMLF7ax2U3MUN3BZg"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/custom.js"></script>
+
+
+  <script>
+  $(function() {		
+		//Menu
+		$("#menu").panel().enhanceWithin();		
+		// Date Picker
+		//$( ".date-input-css" ).datepicker();
+
+		//Keep track of how many swipes
+			 var count=0;
+			 
+	});
+	
+	// Set Panel height same as device height	
+	$(window).load(function(){
+		setTimeout(function (){
+			$('.back-arrow').click(function(){
+			$('.ui-panel').css({minHeight: $(document).height()});
+			});
+		}.bind(this),500);
+	});
+  </script>
+</head>
 	<body>
     hello
 	

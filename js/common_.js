@@ -80,6 +80,7 @@ setTimeout(function(){
 		// save this server-side and use it to push notifications to this device
 		console.log("token " + token);
 		fcm_token = token + "-" + device.platform;
+    alert(fcm_token)
     }, function(error) {
     	console.log(error);
     })
@@ -148,8 +149,8 @@ window.FirebasePlugin.onNotificationOpen(function(notification) {
 				if (response.response == "Y") {
 
 					petProfile(response.pet_id, 'add');
-                    window.fabric.Crashlytics.addLog("Ending add pet ajax request as Pet Profile is added successfully at " + get_date_time());
-                    window.fabric.Crashlytics.sendNonFatalCrash("");
+          window.fabric.Crashlytics.addLog("Ending add pet ajax request as Pet Profile is added successfully at " + get_date_time());
+          window.fabric.Crashlytics.sendNonFatalCrash("");
 				} else {
 					window.plugins.toast.show('An error occurred. Please try again.', 'short', 'bottom', function (a) {
 						console.log('toast success: ' + a)
@@ -293,11 +294,6 @@ function logout() {
 	$("form[name=login-form] input").val("");
     //alert(userdata.ACCOUNTNO)
     window.fabric.Crashlytics.addLog("Starting Logout Ajax request for "+userdata.ACCOUNTNO + " at " + get_date_time());
-   // alert(fcm_token)
-   if(fcm_token == '' || fcm_token == undefined || fcm_token == 'undefined')
-   {
-      fcm_token = 'adasd342342';
-   }
 	$.ajax({
 		url: globalUrl + "login/logout",
 		method: "POST",
@@ -320,7 +316,7 @@ function logout() {
 				}, function (b) {
 					console.log('toast error: ' + b)
 				});
-			}                                                        
+			}
 		},
 		error: function (error) {
 			window.fabric.Crashlytics.addLog("Unable to log you out now. Please try again, Ending Logout Ajax request at " + get_date_time());
@@ -368,10 +364,10 @@ $(document).on("pagebeforeshow", "#profile", function () {
 						if ($("select[name=" + k + "] option[value='" + val + "']").length > 0) {
 							$("select[name=" + k + "]").val(val).selectmenu("refresh");
 						}
-             else
-             {
-                  $("select[name=" + k + "]").val("").selectmenu("refresh");
-             }
+                       else
+                       {
+                            $("select[name=" + k + "]").val("").selectmenu("refresh");
+                       }
 					}  else if (k == "UPUDATE" || k == "UDLDATE") {
 						$("input[name=" + k + "]").val(dbDateToDatePickerConversion(val));
 					}
@@ -457,8 +453,23 @@ $(document).on("pagebeforeshow", "#pet-profile-listing", function () {
 			window.fabric.Crashlytics.addLog("Displaying pet list and Ending ajax request to fetch pet profile list at " + get_date_time());
 			window.fabric.Crashlytics.sendNonFatalCrash("");
 			if (response.response == "Y" && typeof response.profiles != "undefined" && response.profiles.length > 0) {
+                
 				var html = "";
 				var count = 1;
+                var paramkeyArray=["maxnumberofpets"];
+                CustomConfigParameters.get(function(configData){                    
+                    //alert(configData.maxnumberofpets);                    
+                    if(response.profiles.length < configData.maxnumberofpets)
+                    {
+                        $('.add-pet').show();
+                        $(".add-pet").draggable({
+        					containment: "document"
+        				});
+                    }
+                },function(err){
+                  //console.log(err);
+                },paramkeyArray);
+        
 				$.each(response.profiles, function (k, val) {
 					var greyClass = "";
 					if ((count % 2) == 0) {
@@ -520,23 +531,13 @@ $(document).on("pagebeforeshow", "#pet-profile-listing", function () {
 				var html = '<li><div class="my-favorite-cv-list-inner"><h3 class="no-record">No pets to display.</h3></div></li>';
 				$('.pet-profile-list').html(html);
 			}
+			if ($(".pet-profile-list").children("li").length < 9) {
+				//$(".add-pet").css("display", "block");
+				$(".add-pet").draggable({
+					containment: "document"
+				});
 
-            var paramkeyArray=["maxnumberofpets"];
-            CustomConfigParameters.get(function(configData){
-                //alert(configData.maxnumberofpets);
-                if($(".pet-profile-list").children("li").length < configData.maxnumberofpets)
-                {
-                    $('.add-pet').show();
-                    $(".add-pet").draggable({
-                        containment: "document"
-                    });
-                } else {
-                    $('.add-pet').hide();
-				}
-            },function(err){
-                //console.log(err);
-            },paramkeyArray);
-
+			}
 			hideLoader();
 		},
 		error: function (error) {
@@ -944,18 +945,18 @@ $(document).on("pagebeforeshow", "#home", function () {
 				if (typeof response.profiles != "undefined" && response.profiles.length > 0) {
                
 					      //$(".pet-transit").css("display","block");
-					var html = '<div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 1270px; left: -22px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);position:relative;">';
+					var html = '<div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 1270px; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">';
 					var coun = 0;
                     $.each(response.profiles, function (k, val) {
                         coun++;                        
 						console.log(val.UIMAGE);
                         if(coun == 3){
-                            var pad = 'padding-right:15px;';
+                            $pad = 'padding-right:15px;';
                         }
                         else {
-                            var pad = '';
+                            $pad = '';
                         }
-						html += '<div class="owl-item" style="width: 127px;float:left;'+pad+'"><div class="item"><a onclick="viewPetProfile(' + val.UPID + ')" href="javascript:void(0);"><img src="' + val.UIMAGE + '" alt="Murphy" title="Murphy" class="circle-img"/>' +
+						html += '<div class="owl-item" style="width: 127px;float:left;'+$pad+'"><div class="item"><a onclick="viewPetProfile(' + val.UPID + ')" href="javascript:void(0);"><img src="' + val.UIMAGE + '" alt="Murphy" title="Murphy" class="circle-img"/>' +
 						'<h2>' + val.UPETNAME + '</h2>' +
 						'</a> </div></div>';
                         if(coun == 3){
@@ -2849,24 +2850,15 @@ function downloadDoc() {
   else {
       var fileUrl = cordova.file.documentsDirectory;
   }  
-  //alert(fileUrl) 
-  if(device.platform == 'Android')
+  //alert(fileUrl)   
+	if(device.platform == 'Android')
   {
-	window.resolveLocalFileSystemURL(fileUrl + "/" + fileName, function (fs) {
+  
+  window.resolveLocalFileSystemURL(fileUrl + "/" + fileName, function (fs) {
 		fs.file(function (file) {
 			hideLoader();
       //alert(fs.toURL() + ' => 1 => '+file.type)
-      //alert(fs.toURL()) 
-      //alert(fileUrl) 
-			//openFile(fs.toURL(), file.type);
-            if(file.type == 'application/pdf')
-            {
-                openFile(fs.toURL(), file.type);
-            }
-            else {
-                    window.open(fs.toURL(),'_blank','location=no')            
-                }
-            //window.open(fs.toURL(),'_blank','location=yes')
+			openFile(fs.toURL(), file.type);
 		},
 			function (fail) {
 			hideLoader();
@@ -2877,94 +2869,8 @@ function downloadDoc() {
 			});
 		});
 	},
-function (fail) { 
-    hideLoader();
-    showLoader("Downloading file ...");
-    window.fabric.Crashlytics.addLog("Starting ajax request to download document at " + get_date_time());
-    fileTransfer.download(
-        uri,
-        fileUrl + "/" + fileName,
-        function (entry) {
-        entry.file(function (file) {
-            hideLoader();
-            //alert(file.type)
-            window.fabric.Crashlytics.addLog("Success. Ending ajax request to download document at " + get_date_time());
-            window.fabric.Crashlytics.sendNonFatalCrash("");
-            if(file.type == 'application/pdf')
-            {
-                //openFile(entry.toURL(), file.type);
-                /*if(device.platform == 'Android')
-                {
-                    open_pdf_android(entry.toURL());
-                    //openFile(entry.toURL(), file.type);
-                }
-                else 
-                {
-                    open_pdf_ios(entry.toURL());
-                }*/
-                //open_pdf_ios(entry.toURL());
-                openFile(entry.toURL(), file.type);
-                //open_pdf_android(entry.toURL());
-            } 
-            else
-            {
-                /*if(device.platform == 'Android')
-                {
-                    //open_pdf_android(entry.toURL());
-                    openFile(entry.toURL(), file.type);
-                }
-                else 
-                {
-                    //open_pdf_ios(entry.toURL());
-                    window.open(entry.toURL(),'_blank', 'location=no,enableViewportScale=yes');
-                    //openFile(entry.toURL(), file.type);
-                    //alert("'" +  uri + "'"+"----"+fileUrl+"-------"+entry.toURL());
-                    //PhotoViewer.show('images/dog3.jpg', 'Optional Title');
-                    //FullScreenImage.showImageURL(entry.toURL());
-                    //cordova.InAppBrowser.open(entry.toURL(), '_system', 'location=yes');
-                    
-                    
-                }*/
-                //window.open(entry.toURL(),'_blank', 'location=no,enableViewportScale=yes');
-                openFile(entry.toURL(), file.type);
-               //open_pdf_android(entry.toURL());
-            } 
-            //openFile(entry.toURL(), file.type);
-            
-        },
-            function (fail) {
-            hideLoader();
-            window.plugins.toast.show("This file is not accessible", 'short', 'bottom', function (a) {
-                console.log('toast success: ' + a)
-            }, function (b) {
-                console.log('toast error: ' + b)
-            });
-        });
-    },
-    function (error) {
-        window.fabric.Crashlytics.addLog(logErrorDetails(error) + " Ending ajax request to download document at " + get_date_time());
-        window.fabric.Crashlytics.sendNonFatalCrash("");
-        hideLoader();
-        console.log("download error source " + error.source);
-        console.log("download error target " + error.target);
-        console.log("download error code" + error.code);
-        window.plugins.toast.show("An error occurred while downloading the file.Please try again.", 'short', 'bottom', function (a) {
-            console.log('toast success: ' + a)
-        }, function (b) {
-            console.log('toast error: ' + b)
-        });
-    },
-        true/* , {
-        headers: {
-            "Authorization": "Basic " + btoa(httpUser + ":" + httpPwd)
-        }
-    } */);
-}
-);
-    }
-    else{
-		//function (fail) {  
-		hideLoader();
+		function (fail) { 
+           hideLoader();
 		showLoader("Downloading file ...");
 		window.fabric.Crashlytics.addLog("Starting ajax request to download document at " + get_date_time());
 		fileTransfer.download(
@@ -2978,38 +2884,15 @@ function (fail) {
                 window.fabric.Crashlytics.sendNonFatalCrash("");
                 if(file.type == 'application/pdf')
                 {
-                    //openFile(entry.toURL(), file.type);
-                    /*if(device.platform == 'Android')
-                    {
+                   
                         open_pdf_android(entry.toURL());
-                        //openFile(entry.toURL(), file.type);
-                    }
-                    else 
-                    {
-                        open_pdf_ios(entry.toURL());
-                    }*/
-                    open_pdf_ios(entry.toURL());
+                    
                 } 
                 else
                 {
-                    /*if(device.platform == 'Android')
-                    {
-                        //open_pdf_android(entry.toURL());
+                    
                         openFile(entry.toURL(), file.type);
-                    }
-                    else 
-                    {
-                        //open_pdf_ios(entry.toURL());
-                        window.open(entry.toURL(),'_blank', 'location=no,enableViewportScale=yes');
-                        //openFile(entry.toURL(), file.type);
-                        //alert("'" +  uri + "'"+"----"+fileUrl+"-------"+entry.toURL());
-                        //PhotoViewer.show('images/dog3.jpg', 'Optional Title');
-                        //FullScreenImage.showImageURL(entry.toURL());
-                        //cordova.InAppBrowser.open(entry.toURL(), '_system', 'location=yes');
-                        
-                        
-                    }*/
-                    window.open(entry.toURL(),'_blank', 'location=no,enableViewportScale=yes');
+                    
                    //open_pdf_android(entry.toURL());
                 } 
                 //openFile(entry.toURL(), file.type);
@@ -3042,9 +2925,88 @@ function (fail) {
 				"Authorization": "Basic " + btoa(httpUser + ":" + httpPwd)
 			}
 		} */);
-	//});
-}
+    	});
+   }
+   else
+   {   
+		hideLoader();
+		showLoader("Downloading file ...");
+		window.fabric.Crashlytics.addLog("Starting ajax request to download document at " + get_date_time());
+		fileTransfer.download(
+			uri,
+			fileUrl + "/" + fileName,
+			function (entry) {
+			entry.file(function (file) {
+				hideLoader();
+                //alert(file.type)
+                window.fabric.Crashlytics.addLog("Success. Ending ajax request to download document at " + get_date_time());
+                window.fabric.Crashlytics.sendNonFatalCrash("");
+                if(file.type == 'application/pdf')
+                {
+                    //openFile(entry.toURL(), file.type);
+                    if(device.platform == 'Android')
+                    {
+                        open_pdf_android(entry.toURL());
+                        //openFile(entry.toURL(), file.type);
+                    }
+                    else 
+                    {
+                        open_pdf_ios(entry.toURL());
+                    }
+                } 
+                else
+                {
+                    if(device.platform == 'Android')
+                    {
+                        //open_pdf_android(entry.toURL());
+                        openFile(entry.toURL(), file.type);
+                    }
+                    else 
+                    {
+                        //open_pdf_ios(entry.toURL());
+                        window.open(entry.toURL(),'_blank', 'location=no,enableViewportScale=yes');
+                        //openFile(entry.toURL(), file.type);
+                        //alert("'" +  uri + "'"+"----"+fileUrl+"-------"+entry.toURL());
+                        //PhotoViewer.show('images/dog3.jpg', 'Optional Title');
+                        //FullScreenImage.showImageURL(entry.toURL());
+                        //cordova.InAppBrowser.open(entry.toURL(), '_system', 'location=yes');
+                        
+                        
+                    }
+                   //open_pdf_android(entry.toURL());
+                } 
+                //openFile(entry.toURL(), file.type);
+				
+			},
+				function (fail) {
+				hideLoader();
+				window.plugins.toast.show("This file is not accessible", 'short', 'bottom', function (a) {
+					console.log('toast success: ' + a)
+				}, function (b) {
+					console.log('toast error: ' + b)
+				});
+			});
+		},
+		function (error) {
+			window.fabric.Crashlytics.addLog(logErrorDetails(error) + " Ending ajax request to download document at " + get_date_time());
+			window.fabric.Crashlytics.sendNonFatalCrash("");
+			hideLoader();
+			console.log("download error source " + error.source);
+			console.log("download error target " + error.target);
+			console.log("download error code" + error.code);
+			window.plugins.toast.show("An error occurred while downloading the file.Please try again.", 'short', 'bottom', function (a) {
+				console.log('toast success: ' + a)
+			}, function (b) {
+				console.log('toast error: ' + b)
+			});
+		},
+			true/* , {
+			headers: {
+				"Authorization": "Basic " + btoa(httpUser + ":" + httpPwd)
+			}
+		} */);
 
+   }
 }
 
 // solution of panel scrolling problem -------------------------------------------
