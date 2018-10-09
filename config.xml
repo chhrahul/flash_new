@@ -31,10 +31,5 @@
     <engine name="android" spec="^7.0.0" />
 
 	
-	<allow-navigation href="*youtube*" />
-	<allow-navigation href="*ytimg*" />
-	<allow-navigation href="*youtube-nocookie*" />
-	<allow-navigation href="https://*youtube.com/*"/>
-	
 	 
 </widget>
